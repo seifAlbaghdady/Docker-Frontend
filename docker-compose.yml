@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes: # to make it reference the local files and not the container files
+      - /app/node_modules # this is to prevent the node_modules folder from being overwritten by the container
+      - .:/app # this is to map the current directory to the container
+  tests:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ['npm', 'run', 'test']
